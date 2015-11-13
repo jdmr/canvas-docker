@@ -1,9 +1,9 @@
-FROM ubuntu:14.04
+FROM debian
 
-MAINTAINER Jay Luker <jay_luker@harvard.edu>
+MAINTAINER David Mendoza <jdmendoza@swau.edu>
 
-ENV POSTGRES_VERSION 9.3
-ENV RAILS_ENV development
+ENV POSTGRES_VERSION 9.4
+ENV RAILS_ENV production
 
 # enable https repos and add in nodesource repo
 RUN apt-get -y install apt-transport-https
@@ -23,11 +23,9 @@ RUN apt-get install -y \
     ruby2.1 ruby2.1-dev zlib1g-dev libxml2-dev libxslt1-dev \
     imagemagick libpq-dev libxmlsec1-dev libcurl4-gnutls-dev \
     libxmlsec1 build-essential openjdk-7-jre unzip curl \
-    python g++ make git-core nodejs supervisor redis-server \
+    python g++ make git-core nodejs supervisor \
     libpq5 libsqlite3-dev \
-    postgresql-$POSTGRES_VERSION \
     postgresql-client-$POSTGRES_VERSION \
-    postgresql-contrib-$POSTGRES_VERSION \
     && apt-get clean \
     && rm -Rf /var/cache/apt
 
@@ -58,18 +56,12 @@ RUN cd /opt/canvas-lms \
 COPY assets/database.yml /opt/canvas-lms/config/database.yml
 COPY assets/redis.yml /opt/canvas-lms/config/redis.yml
 COPY assets/cache_store.yml /opt/canvas-lms/config/cache_store.yml
-COPY assets/development-local.rb /opt/canvas-lms/config/environments/development-local.rb
 COPY assets/supervisord.conf /etc/supervisor/supervisord.conf
 COPY assets/dbinit.sh /dbinit.sh
-COPY assets/dbconf.sh /dbconf.sh
-RUN chmod 755 /dbconf.sh /dbinit.sh
+RUN chmod 755 /dbinit.sh
 
-RUN /dbconf.sh && service postgresql start && /dbinit.sh
+RUN /dbinit.sh
 
-# postgres
-EXPOSE 5432
-# redis
-EXPOSE 6379
 # canvas
 EXPOSE 3000
 
