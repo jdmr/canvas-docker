@@ -1,4 +1,4 @@
-FROM debian
+FROM ubuntu
 
 MAINTAINER David Mendoza <jdmendoza@swau.edu>
 
