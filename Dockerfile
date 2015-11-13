@@ -2,7 +2,7 @@ FROM ubuntu
 
 MAINTAINER David Mendoza <jdmendoza@swau.edu>
 
-ENV POSTGRES_VERSION 9.4
+ENV POSTGRES_VERSION 9.3
 ENV RAILS_ENV production
 
 # enable https repos and add in nodesource repo
